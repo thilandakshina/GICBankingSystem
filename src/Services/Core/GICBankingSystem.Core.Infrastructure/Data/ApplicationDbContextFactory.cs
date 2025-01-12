@@ -9,6 +9,10 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         optionsBuilder.UseSqlServer("Server=localhost;Database=GICBankingSystem;User Id=sa;Password=Sa12345678;TrustServerCertificate=True;");
+
+        //Please modify Server , User Id and Password
+
+
         return new ApplicationDbContext(optionsBuilder.Options);
     }
 
