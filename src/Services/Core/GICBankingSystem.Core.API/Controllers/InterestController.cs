@@ -12,31 +12,16 @@ public class InterestController : Controller
     [HttpPost]
     public async Task<IActionResult> CreateInterestRule([FromBody] CreateInterestRuleCommand command)
     {
-        try
-        {
-            var result = await _mediator.Send(command);
-
-            return Ok(result.InterestRules);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var result = await _mediator.Send(command);
+        return Ok(result.InterestRules);
     }
 
 
     [HttpGet]
     public async Task<IActionResult> GetInterestRules([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
     {
-        try
-        {
-            var query = new GetInterestRuleByDateRangeQuery(fromDate, toDate);
-            var result = await _mediator.Send(query);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var query = new GetInterestRuleByDateRangeQuery(fromDate, toDate);
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 }

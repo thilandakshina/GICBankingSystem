@@ -38,7 +38,7 @@ public class InterestRuleHandler
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine($"Error: {ex.Message}");
+                System.Console.WriteLine($"{ex.Message}");
             }
         }
     }

@@ -66,7 +66,15 @@ namespace GICBankingSystem.Console.Services
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new HttpRequestException($"API request failed: {responseContent}");
+                    var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(
+                responseContent,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            );
+
+                    throw new HttpRequestException(
+                        $"Error: {errorResponse.Detail}\n" +
+                        $"TraceId: {errorResponse.TraceId}"
+                    );
                 }
 
                 return JsonSerializer.Deserialize<T>(
@@ -76,7 +84,7 @@ namespace GICBankingSystem.Console.Services
             }
             catch (Exception ex)
             {
-                throw new HttpRequestException($"Error communicating with the server: {ex.Message}");
+                throw new HttpRequestException($"{ex.Message}");
             }
         }
     }

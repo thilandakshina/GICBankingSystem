@@ -39,7 +39,7 @@ public class StatementHandler
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine($"Error: {ex.Message}");
+                System.Console.WriteLine($"{ex.Message}");
             }
         }
     }

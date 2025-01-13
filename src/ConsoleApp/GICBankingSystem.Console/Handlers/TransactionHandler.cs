@@ -38,7 +38,7 @@ public class TransactionHandler
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine($"Error: {ex.Message}");
+                System.Console.WriteLine($"{ex.Message}");
             }
         }
     }

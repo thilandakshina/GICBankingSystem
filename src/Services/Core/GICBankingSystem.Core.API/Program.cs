@@ -1,12 +1,13 @@
 using GICBankingSystem.Core.API;
 using GICBankingSystem.Core.Application;
 using GICBankingSystem.Core.Infrastructure;
+using GICBankingSystem.Shared.Exceptions.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services
     .AddApplicationServices(builder.Configuration)
     .AddInfrastructureServices(builder.Configuration)
@@ -24,6 +25,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler(options => { }); 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

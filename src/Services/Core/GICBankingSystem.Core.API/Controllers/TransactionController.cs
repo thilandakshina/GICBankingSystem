@@ -12,29 +12,21 @@ public class TransactionController : Controller
     [HttpPost]
     public async Task<IActionResult> ProcessTransaction([FromBody] ProcessTransactionCommand command)
     {
-        try
+        var result = await _mediator.Send(command);
+        var response = new StatementDto
         {
-            var result = await _mediator.Send(command);
-            var response = new StatementDto
+            AccountNo = result.Statement.AccountNo,
+            Transactions = result.Statement.Transactions.Select(t => new StatementLineDto
             {
-                AccountNo = result.Statement.AccountNo,
-                Transactions = result.Statement.Transactions.Select(t => new StatementLineDto
-                {
-                    TransactionId = t.TransactionId,
-                    Type = t.Type,
-                    Amount = t.Amount,
-                    Balance = t.Balance,
-                    CreatedDate = t.CreatedDate
-                }).ToList(),
-                FinalBalance = result.Statement.FinalBalance,
-                StartingBalance = result.Statement.StartingBalance
-            };
-
-            return Ok(new { response });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+                TransactionId = t.TransactionId,
+                Type = t.Type,
+                Amount = t.Amount,
+                Balance = t.Balance,
+                CreatedDate = t.CreatedDate
+            }).ToList(),
+            FinalBalance = result.Statement.FinalBalance,
+            StartingBalance = result.Statement.StartingBalance
+        };
+        return Ok(new { response });
     }
 }
