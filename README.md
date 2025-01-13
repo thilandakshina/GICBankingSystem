@@ -68,9 +68,9 @@ The solution follows Clean Architecture with the following structure:
 1. Clone the repository
 
 2. Configure Connection Strings:
-   Update the connection string in two locations:
+   Update the connection string in below location:
    - `GICBankingSystem.Core.API/appsettings.json`
-   - `GICBankingSystem.Core.Infrastructure/Data/ApplicationDbContextFactory.cs`
+   
 
    Example connection string:
    ```
