@@ -36,7 +36,7 @@ public class TransactionControllerTests : ControllerTestBase<TransactionControll
     }
 
     [Test]
-    public async Task ProcessTransaction_WhenExceptionOccurs_ReturnsBadRequest()
+    public void ProcessTransaction_WhenExceptionOccurs_ThrowsException()
     {
         // Arrange
         var command = CreateSampleCommand();
@@ -44,14 +44,11 @@ public class TransactionControllerTests : ControllerTestBase<TransactionControll
         _mediatorMock.Setup(m => m.Send(command, default))
             .ThrowsAsync(new Exception(expectedErrorMessage));
 
-        // Act
-        var result = await _controller.ProcessTransaction(command);
+        // Act & Assert
+        var exception = Assert.ThrowsAsync<Exception>(async () =>
+            await _controller.ProcessTransaction(command));
 
-        // Assert
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-        var badRequestResult = result as BadRequestObjectResult;
-        Assert.That(badRequestResult.StatusCode, Is.EqualTo(400));
-        Assert.That(badRequestResult.Value, Is.EqualTo(expectedErrorMessage));
+        Assert.That(exception.Message, Is.EqualTo(expectedErrorMessage));
     }
 
     [Test]

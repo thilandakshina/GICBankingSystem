@@ -64,7 +64,7 @@ public class StatementControllerTests : ControllerTestBase<StatementController>
     }
 
     [Test]
-    public async Task GetStatement_WhenExceptionOccurs_ReturnsBadRequest()
+    public void GetStatement_WhenExceptionOccurs_ThrowsException()
     {
         // Arrange
         var accountNo = "ACC001";
@@ -74,13 +74,11 @@ public class StatementControllerTests : ControllerTestBase<StatementController>
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetStatementQuery>(), default))
             .ThrowsAsync(new Exception(expectedError));
 
-        // Act
-        var result = await _controller.GetStatement(accountNo, period);
+        // Act & Assert
+        var exception = Assert.ThrowsAsync<Exception>(async () =>
+            await _controller.GetStatement(accountNo, period));
 
-        // Assert
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-        var badRequestResult = result as BadRequestObjectResult;
-        Assert.That(badRequestResult.Value, Is.EqualTo(expectedError));
+        Assert.That(exception.Message, Is.EqualTo(expectedError));
     }
 
 }

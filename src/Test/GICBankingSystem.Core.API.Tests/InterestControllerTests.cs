@@ -51,25 +51,6 @@ public class InterestControllerTests : ControllerTestBase<InterestController>
     }
 
     [Test]
-    public async Task CreateInterestRule_WhenExceptionOccurs_ReturnsBadRequest()
-    {
-        // Arrange
-        var command = new CreateInterestRuleCommand(new InterestRuleDto());
-        var expectedError = "Invalid rule data";
-
-        _mediatorMock.Setup(m => m.Send(command, default))
-            .ThrowsAsync(new Exception(expectedError));
-
-        // Act
-        var result = await _controller.CreateInterestRule(command);
-
-        // Assert
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-        var badRequestResult = result as BadRequestObjectResult;
-        Assert.That(badRequestResult.Value, Is.EqualTo(expectedError));
-    }
-
-    [Test]
     public async Task GetInterestRules_Success_ReturnsOkResult()
     {
         // Arrange
@@ -101,7 +82,24 @@ public class InterestControllerTests : ControllerTestBase<InterestController>
     }
 
     [Test]
-    public async Task GetInterestRules_WhenExceptionOccurs_ReturnsBadRequest()
+    public void CreateInterestRule_WhenExceptionOccurs_ThrowsException()
+    {
+        // Arrange
+        var command = new CreateInterestRuleCommand(new InterestRuleDto());
+        var expectedError = "Invalid rule data";
+
+        _mediatorMock.Setup(m => m.Send(command, default))
+            .ThrowsAsync(new Exception(expectedError));
+
+        // Act & Assert
+        var exception = Assert.ThrowsAsync<Exception>(async () =>
+            await _controller.CreateInterestRule(command));
+
+        Assert.That(exception.Message, Is.EqualTo(expectedError));
+    }
+
+    [Test]
+    public void GetInterestRules_WhenExceptionOccurs_ThrowsException()
     {
         // Arrange
         var fromDate = new DateTime(2024, 1, 1);
@@ -111,12 +109,10 @@ public class InterestControllerTests : ControllerTestBase<InterestController>
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetInterestRuleByDateRangeQuery>(), default))
             .ThrowsAsync(new Exception(expectedError));
 
-        // Act
-        var result = await _controller.GetInterestRules(fromDate, toDate);
+        // Act & Assert
+        var exception = Assert.ThrowsAsync<Exception>(async () =>
+            await _controller.GetInterestRules(fromDate, toDate));
 
-        // Assert
-        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-        var badRequestResult = result as BadRequestObjectResult;
-        Assert.That(badRequestResult.Value, Is.EqualTo(expectedError));
+        Assert.That(exception.Message, Is.EqualTo(expectedError));
     }
 }
